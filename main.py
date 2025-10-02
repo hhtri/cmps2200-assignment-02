@@ -22,9 +22,19 @@ def parens_match_iterative(mylist):
     >>>parens_match_iterative(['('])
     False
     """
-    ### TODO
+    ###
     return iterate(parens_update, 0, mylist) == 0
     ###
+
+def iterate(counter_function, running_total, remaining_items):
+    # stop when there is nothing left to process
+    if remaining_items == []:
+        return running_total
+    # take the first item, update once, do recursion on the rest
+    first_item = remaining_items[0]
+    rest_items = remaining_items[1:]
+    updated_total = counter_function(running_total, first_item)
+    return iterate(counter_function, updated_total, rest_items)
 
 
 def parens_update(current_output, next_input):
@@ -39,7 +49,7 @@ def parens_update(current_output, next_input):
     Returns:
       the updated value of `current_output`
     """
-    ###TODO
+    ###
     if current_output == -math.inf:  # in an invalid state; carry it forward
         return current_output
     if next_input == '(':            # new open parens 
@@ -76,10 +86,26 @@ def parens_match_scan(mylist):
     False
     
     """
-    ###TODO
     history, last = scan(plus, 0, list(map(paren_map, mylist)))
     return last == 0 and reduce(min_f, 0, history) >= 0
     ###
+
+# added plus
+def plus(a, b): 
+    return a + b
+
+# added reduce
+def reduce(combine, seed, seq):
+    n = len(seq)
+    if n == 0:
+        return seed
+    if n == 1:
+        return seq[0]
+    mid = n // 2
+    left_val = reduce(combine, seed, seq[:mid])
+    right_val = reduce(combine, seed, seq[mid:])
+    return combine(left_val, right_val)
+
 
 def scan(f, id_, a):
     """
@@ -148,10 +174,10 @@ def parens_match_dc_helper(mylist):
       L is the number of unmatched left parentheses. This output is used by 
       parens_match_dc to return the final True or False value
     """
-    ###TODO
+
     # Base cases
     if len(mylist) == 0:
-        return [0,0]
+        return (0,0)
     elif len(mylist) == 1:
         if mylist[0] == '(':
             return (0, 1) # one unmatched (
